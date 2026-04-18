@@ -351,16 +351,19 @@ export function scoreJobFitHeuristic(
       }
     }
 
+      const matched = bestStrength > 20
+
     return {
       requirement: req,
-      matched: bestStrength > 20,
-      matchedEntryId: bestEntry?.id,
+      matched,
+      matchedEntryId: matched ? bestEntry?.id : undefined,
       matchStrength: Math.round(Math.min(100, bestStrength)),
       recencyAdjusted: Math.round(Math.min(100, bestStrength * (bestEntry?.recencyWeight ?? 0.5))),
-      detail: bestEntry
+      detail: matched && bestEntry
         ? `Matched via ${bestEntry.role} at ${bestEntry.company}`
         : 'No strong match found'
     }
+
   })
 
   return {

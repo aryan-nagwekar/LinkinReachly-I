@@ -165,6 +165,19 @@ describe('scoreJobFitHeuristic', () => {
     expect(result.matchedRequirements[0]).toHaveProperty('matched')
     expect(result.matchedRequirements[0]).toHaveProperty('matchStrength')
   })
+    it('does not attach matched entry metadata when a requirement stays below the match threshold', () => {
+    const job = makeJob({
+      requirements: ['valuation audit compliance']
+    })
+
+    const result = scoreJobFitHeuristic(profile, job)
+    const requirementMatch = result.matchedRequirements[0]
+
+    expect(requirementMatch).toBeDefined()
+    expect(requirementMatch?.matched).toBe(false)
+    expect(requirementMatch?.matchedEntryId).toBeUndefined()
+    expect(requirementMatch?.detail).toBe('No strong match found')
+  })
 
   it('handles jobs with no description gracefully', () => {
     const job = makeJob({ description: undefined, requirements: undefined })
